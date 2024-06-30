@@ -4,14 +4,21 @@ const initialState = {
   user: null,
   isAuthState: false,
 };
+console.log(initialState);
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    login: (state, { payload }) => {},
-    logout: (state) => {},
-    isAuthChange: (state) => {},
+    login: (state, { payload }) => {
+      state.user = payload;
+    },
+    logout: (state) => {
+      state.user = null;
+    },
+    isAuthChange: (state) => {
+      state.isAuthState = true;
+    },
   },
 });
 

@@ -1,15 +1,25 @@
-import React from "react";
 import { Form } from "react-router-dom";
 import { FormInput } from "../components";
+import { useActionData } from "react-router-dom";
+import { useLogin } from "../hooks/useLogin";
+import { useEffect } from "react";
 
-export const action = async () => {
-  let formData = await requestAnimationFrame.formData();
+export const action = async ({ request }) => {
+  let formData = await request.formData();
   let email = formData.get("email");
   let password = formData.get("password");
   return { email, password };
 };
 
 function Login() {
+  const userData = useActionData();
+  const { loginUser, isPending } = useLogin();
+
+  useEffect(() => {
+    if (userData) {
+      loginUser(userData.email, userData.password);
+    }
+  }, [userData]);
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
       <div className=" hidden lg:block h-full bg-orange-50  bg-[url('./login-img.jpg')] bg-center bg-cover"></div>
@@ -19,9 +29,15 @@ function Login() {
             <h1 className="text-3xl font-semibold">Login</h1>
             <FormInput type="email" label="email" name="email" />
             <FormInput type="password" label="password" name="password" />
-
             <div className="w-full">
-              <button className="btn btn-primary btn-block">Login</button>
+              {!isPending && (
+                <button className="btn btn-primary btn-block">Login</button>
+              )}
+              {isPending && (
+                <button disabled className="btn btn-primary btn-block">
+                  Loading...
+                </button>
+              )}
             </div>
           </Form>
           <div className="w-full mt-5">
